@@ -1,0 +1,9 @@
+Metadata-Version: 2.4
+Name: rag-perf-bench
+Version: 0.1.0
+Summary: A benchmarking framework for measuring RAG pipeline latency, throughput, and performance.
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: requests>=2.28.0
+Requires-Dist: pytest>=7.0.0
+Requires-Dist: pytest-benchmark>=4.0.0

@@ -1,0 +1,19 @@
+{
+  "benchmark_queries": [
+    {
+      "id": 1,
+      "query": "What is the return policy for electronics?",
+      "expected_context_keywords": ["30 days", "receipt", "original packaging"]
+    },
+    {
+      "id": 2,
+      "query": "How do I reset my account password?",
+      "expected_context_keywords": ["settings", "security", "email link"]
+    },
+    {
+      "id": 3,
+      "query": "What are the international shipping fees?",
+      "expected_context_keywords": ["flat rate", "customs", "destination"]
+    }
+  ]
+}
