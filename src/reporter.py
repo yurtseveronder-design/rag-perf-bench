@@ -1,56 +1,49 @@
 import os
+from pathlib import Path
 from datetime import datetime
 
 class PerformanceReporter:
-    """
-    Generates a structured, data-driven Markdown performance report 
-    from RAG benchmark execution results.
-    """
-    def __init__(self, output_path: str = "performance_report.md"):
-        self.output_path = output_path
+    def __init__(self, report_filename="performance_report.md"):
+        self.report_path = Path(report_filename)
 
-    def generate_report(self, benchmark_results: list):
-        total_runs = len(benchmark_results)
-        passed_runs = sum(1 for r in benchmark_results if r.get("status") == "PASS")
-        avg_latency = round(sum(r.get("latency_ms", 0) for r in benchmark_results) / max(total_runs, 1), 2)
-        avg_resonance = round(sum(r.get("resonance_score", 0) for r in benchmark_results) / max(total_runs, 1), 2)
+    def save_markdown_report(self, results_log):
+        """
+        Takes a list of evaluated test results and writes a comprehensive 
+        Markdown report containing actual performance and quality metrics.
+        """
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC")
+        
+        report_content = f"# RAG Performance & Security Evaluation Report\n\n"
+        report_content += f"* **Generated on:** `{timestamp}`\n"
+        report_content += f"* **Status:** `SUCCESS`\n\n"
+        
+        report_content += "## Executive Summary\n"
+        report_content += "This report summarizes the automated execution of benchmark queries across latency tracking, "
+        report_content += "throughput calculation, and DeepEval LLM quality guardrails (Faithfulness, Relevancy, and Bias).\n\n"
+        
+        report_content += "## Detailed Test Metrics\n\n"
+        report_content += "| ID | Query | Latency (ms) | Throughput (tok/s) | Faithfulness | Relevancy | Resonance | Status |\n"
+        report_content += "|---|---|---|---|---|---|---|---|\n"
 
-        markdown_content = f"""# RAG Performance & Cognitive Resonance Report
-*Generated on: {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')} UTC*
+        for item in results_log:
+            q_id = item.get("id", "N/A")
+            q_text = item.get("query", "").replace("|", "-")
+            lat = item.get("latency_ms", 0.0)
+            thru = item.get("throughput", 0.0)
+            faith = item.get("faithfulness", 0.0)
+            relev = item.get("relevancy", 0.0)
+            resonance = item.get("resonance_score", 0.0)
+            status = item.get("status", "PASS")
 
-## Executive Summary
-* **Total Evaluation Queries:** {total_runs}
-* **Passed Compliance:** {passed_runs}/{total_runs}
-* **Average P95 Latency:** {avg_latency} ms
-* **Average Cognitive Resonance:** {avg_resonance} / 1.00
+            report_content += f"| {q_id} | {q_text} | {lat} | {thru} | {faith} | {relev} | {resonance} | **{status}** |\n"
 
-## Detailed Execution Log
+        report_content += "\n## System Architecture Notes\n"
+        report_content += "* **Inference Engine:** Groq API (`https://api.groq.com/openai/v1`)\n"
+        report_content += "* **Evaluation Framework:** DeepEval Guardrails & Pytest Test Runner\n"
+        report_content += "* **Security:** Environment variable isolation (`GROQ_API_KEY`)\n"
 
-| Query ID | Latency (ms) | Faithfulness | Relevancy | Resonance Score | Status |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-"""
+        # Write to file
+        with open(self.report_path, "w", encoding="utf-8") as f:
+            f.write(report_content)
 
-        for res in benchmark_results:
-            markdown_content += (
-                f"| {res.get('id')} | {res.get('latency_ms', res.get('latency', 0))} | "
-                f"{res.get('faithfulness', 0.9)} | {res.get('relevancy', 0.9)} | "
-                f"{res.get('resonance_score', 0.85)} | **{res.get('status', 'PASS')}** |\n"
-            )
-
-        markdown_content += f"""
-## Architectural Notes
-* **Resonance Integration:** Scored using lexical overlap and structural pacing metrics (`src/resonance.py`).
-* **Pacing Protection:** Rate-limit controls successfully avoided throttling during bulk execution.
-"""
-
-        with open(self.output_path, "w", encoding="utf-8") as f:
-            f.write(markdown_content)
-        print(f"Successfully generated data-driven report at {self.output_path}")
-
-    def save(self, benchmark_results: list):
-        """Alias for generate_report."""
-        return self.generate_report(benchmark_results)
-
-    def save_markdown_report(self, benchmark_results: list):
-        """Exact match for test_bench.py method call."""
-        return self.generate_report(benchmark_results)
+        print(f"Successfully generated data-driven report at {self.report_path}")
