@@ -1,21 +1,29 @@
-# RAG Performance & Resonance Bench
+# RAG Performance Bench
 
-A focused benchmarking tool for evaluating the **quality and performance** of Retrieval-Augmented Generation (RAG) systems.
+**Purpose:** RAG Quality, Latency, Throughput Telemetry, and Cognitive Resonance benchmarking.
 
-## What It Does
+---
 
-Measures how well a RAG pipeline performs across three key dimensions:
-- **Performance** → Latency & Throughput
-- **Quality** → Faithfulness, Answer Relevancy, and Bias (via DeepEval)
-- **Cognitive Resonance** → How naturally and coherently the response aligns with the user query
+## Ecosystem Architecture
+* **[rag-perf-bench](https://github.com/yurtseveronder-design/rag-perf-bench)** *(Current)*: Focuses exclusively on RAG performance, latency, and DeepEval quality metrics.
+* **[prompt-shield-tester](https://github.com/yurtseveronder-design/prompt-shield-tester)**: Focuses strictly on adversarial security, prompt injections, and threat guardrails.
 
-## Core Features
+---
 
-- Cognitive Resonance Analyzer (`src/resonance.py`)
-- DeepEval integration (Faithfulness, Relevancy, Bias)
-- Latency and throughput tracking
-- Structured Markdown performance reports
-- Rate-limit aware execution
-- Fully automated CI with GitHub Actions
+## Example Output (`performance_report.md`)
 
-## Project Structure
+```markdown
+# RAG Performance & Quality Telemetry Report
+
+| Metric | Score / Value |
+| :--- | :--- |
+| **Mean Latency (P95)** | `240ms` |
+| **Throughput** | `42.5 req/sec` |
+| **DeepEval Faithfulness** | `0.94` |
+| **Cognitive Resonance Index** | `0.89` |
+
+### Benchmark Evaluation Log
+| Query ID | Latency (ms) | Faithfulness | Resonance Score | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| `Q_001` | `210` | `0.96` | `0.91` | **✅ PASSED** |
+| `Q_002` | `255` | `0.92` | `0.87` | **✅ PASSED** |
