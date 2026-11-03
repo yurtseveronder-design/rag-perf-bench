@@ -1,23 +1,38 @@
-import numpy as np
+
+import re
+from typing import Dict, Any
 
 class CognitiveResonanceAnalyzer:
     """
-    Evaluates synthetic responses for organic empathy, tone consistency, 
-    and cognitive alignment with human intent.
+    Analyzes semantic alignment, lexical overlap, and cognitive tone 
+    between a user query and a generated RAG response.
     """
-    def __init__(self, target_empathy_weight=0.5):
-        self.target_weight = target_empathy_weight
+    def __init__(self, semantic_threshold: float = 0.4):
+        self.semantic_threshold = semantic_threshold
 
-    def evaluate_resonance(self, query: str, response: str) -> dict:
-        # Simulate cognitive alignment and tone adaptation scoring
-        word_overlap = len(set(query.lower().split()) & set(response.lower().split()))
-        structural_flow = min(1.0, len(response) / (len(query) * 3 + 1))
-        
-        resonance_score = round(float((word_overlap * 0.3) + (structural_flow * 0.7)), 2)
-        is_resonant = resonance_score >= 0.4
+    def evaluate_resonance(self, query: str, response: str) -> Dict[str, Any]:
+        if not query or not response:
+            return {"resonance_score": 0.0, "is_cognitively_resonant": False, "reason": "Empty input detected."}
+
+        # Tokenize and clean text
+        q_tokens = set(re.findall(r'\w+', query.lower()))
+        r_tokens = set(re.findall(r'\w+', response.lower()))
+
+        if not q_tokens:
+            overlap_ratio = 0.0
+        else:
+            overlap_ratio = len(q_tokens.intersection(r_tokens)) / len(q_tokens)
+
+        # Structural length balance check (penalize extreme verbosity or abruptness)
+        length_ratio = min(len(response), len(query) * 5) / max(len(response), len(query) * 5, 1)
+
+        # Composite resonance score
+        resonance_score = round(float((overlap_ratio * 0.6) + (length_ratio * 0.4)), 2)
+        is_resonant = resonance_score >= self.semantic_threshold
 
         return {
             "resonance_score": resonance_score,
             "is_cognitively_resonant": is_resonant,
-            "adaptive_nuance_detected": True
+            "lexical_overlap_ratio": round(overlap_ratio, 2),
+            "structural_balance": round(length_ratio, 2)
         }
