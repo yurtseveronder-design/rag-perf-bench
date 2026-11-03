@@ -1,6 +1,6 @@
 # RAG Performance & Security Evaluation Report
 
-* **Generated on:** `2026-11-03 23:49:45 UTC`
+* **Generated on:** `2026-11-04 00:03:18 UTC`
 * **Status:** `SUCCESS`
 
 ## Executive Summary
