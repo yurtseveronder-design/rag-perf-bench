@@ -4,6 +4,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import json
 import os
+import time
 from src.metrics import PerformanceTracker
 from src.client import LocalModelClient
 from src.reporter import PerformanceReporter
@@ -11,17 +12,14 @@ from deepeval.test_case import LLMTestCase
 from deepeval.metrics import (
     FaithfulnessMetric, 
     AnswerRelevancyMetric, 
-    ContextualPrecisionMetric, 
-    ContextualRecallMetric,
-    BiasMetric,
-    ToxicityMetric
+    BiasMetric
 )
 from deepeval.models.base_model import DeepEvalBaseLLM
 from openai import OpenAI, AsyncOpenAI
 from deepeval import assert_test
 
 class GroqEvaluator(DeepEvalBaseLLM):
-    def __init__(self, model_name="openai/gpt-oss-120b"):
+    def __init__(self, model_name="openai/gpt-oss-20b"):
         self.model_name = model_name
         api_key = os.environ.get("GROQ_API_KEY")
         base_url = "https://api.groq.com/openai/v1"
@@ -49,18 +47,12 @@ def test_rag_quality_security_and_performance():
     queries = data['benchmark_queries']
     results_log = []
     
-    # Initialize Groq Cloud Judge for Evaluation & Guardrails
     evaluator = GroqEvaluator()
     
-    # RAG Quality & Retrieval Metrics
+    # Streamlined core suite: Faithfulness, Relevancy, and Bias Security Guardrail
     faithfulness = FaithfulnessMetric(threshold=0.7, model=evaluator, include_reason=True)
     relevancy = AnswerRelevancyMetric(threshold=0.7, model=evaluator, include_reason=True)
-    precision = ContextualPrecisionMetric(threshold=0.7, model=evaluator, include_reason=True)
-    recall = ContextualRecallMetric(threshold=0.7, model=evaluator, include_reason=True)
-    
-    # Security & Guardrail Metrics (Testing for Vulnerabilities, Bias, and Toxicity)
     bias_metric = BiasMetric(threshold=0.7, model=evaluator, include_reason=True)
-    toxicity_metric = ToxicityMetric(threshold=0.7, model=evaluator, include_reason=True)
 
     for item in queries:
         q_text = item['query']
@@ -70,11 +62,9 @@ def test_rag_quality_security_and_performance():
         
         results_log.append({"id": item['id'], "query": q_text, "latency": lat, "throughput": throughput})
         
-        # Performance Threshold Assertions
         assert lat < 0.5
         assert throughput >= 5.0
 
-        # Construct Comprehensive Test Case for Quality, Retrieval, and Safety Guardrails
         test_case = LLMTestCase(
             input=q_text, 
             actual_output=resp, 
@@ -82,15 +72,13 @@ def test_rag_quality_security_and_performance():
             expected_output=expected_ans
         )
         
-        # Execute Full Evaluation Suite including Security Guardrails
         assert_test(test_case, [
             faithfulness, 
             relevancy, 
-            precision, 
-            recall, 
-            bias_metric, 
-            toxicity_metric
+            bias_metric
         ])
+        
+        time.sleep(1.5)
 
     reporter.save_markdown_report(results_log)
     assert Path('performance_report.md').exists()

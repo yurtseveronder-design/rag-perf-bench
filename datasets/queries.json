@@ -1,8 +1,10 @@
 {
   "benchmark_queries": [
     {
-      "id": "1",
-      "query": "What is the capital of France?"
+      "id": "retrieval_01",
+      "category": "high_speed_retrieval",
+      "query": "What is the capital of France?",
+      "expected_response": "Paris is the capital of France."
     }
   ]
 }
