@@ -1,24 +1,20 @@
-# RAG Performance & Resonance Bench
+# RAG Performance & Security Evaluation Benchmarking Engine
 
-A lightweight, practical testing tool for evaluating RAG (Retrieval-Augmented Generation) systems. It measures core retrieval metrics while also checking how naturally and accurately AI responses align with human intent.
+A robust, modular testing and benchmarking ecosystem designed to evaluate Retrieval-Augmented Generation (RAG) pipelines for latency, throughput, faithfulness, answer relevancy, and bias.
 
-## What It Solves
-When building RAG systems, checking strict factual correctness isn't enough. We also need to know if the model sounds natural, stays on track, and handles pacing cleanly without hitting API rate limits.
+## Core Capabilities
+* **Automated Evaluation Pipeline:** End-to-end orchestration connecting test datasets, model inference, and metric validation.
+* **LLM Guardrails Integration:** Powered by DeepEval metrics (Faithfulness, Relevancy, Bias) backed by high-speed Groq inference.
+* **Cognitive Resonance Scoring:** Analyzes lexical overlap and structural pacing to ensure generated responses match semantic intent.
+* **Data-Driven Reporting:** Automatically compiles test runs into clean, actionable Markdown performance reports (`performance_report.md`).
 
-## Core Features
-* **3-Metric Core Evaluation:** Focuses on Faithfulness, Relevancy, and Bias to keep testing fast and reliable.
-* **Cognitive Resonance Analyzer (`src/resonance.py`):** Goes beyond cold numbers to check tone consistency and how organically the response matches human intent.
-* **API Rate-Limit Protection:** Built with intentional pacing to ensure smooth testing runs without breaking third-party API limits.
-* **Automated CI/CD:** Runs tests automatically on every push via GitHub Actions.
+## Tech Stack
+* **Language:** Python
+* **Testing Framework:** `pytest`
+* **Evaluation & Metrics:** `DeepEval`, OpenAI / Groq API integrations
+* **Automation & CI/CD:** Git, GitHub Actions
 
-## Project Structure
-* `src/`: Core logic including metrics and the resonance analyzer.
-* `datasets/`: Sample data sets for testing queries.
-* `tests/`: Streamlined test suite for continuous validation.
-* `.github/workflows/`: Automated CI pipeline configuration.
-
-## Quick Start
-1. Clone the repository and install dependencies.
-2. Run the test suite locally:
+## Getting Started
+1. Install dependencies:
    ```bash
-   python -m pytest -v
+   pip install -r requirements.txt

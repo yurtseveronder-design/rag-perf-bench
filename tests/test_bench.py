@@ -1,4 +1,3 @@
-
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -49,7 +48,6 @@ def test_rag_quality_security_and_performance():
     tracker = PerformanceTracker()
     client = LocalModelClient()
     reporter = PerformanceReporter()
-    # Take first 2 queries to stay safely within free-tier rate limits
     queries = data['benchmark_queries'][:2]
     results_log = []
 
@@ -92,7 +90,6 @@ def test_rag_quality_security_and_performance():
             bias_metric
         ])
 
-        # Generous pacing delay to respect Groq API rate limits
         time.sleep(3.0)
 
     reporter.save_markdown_report(results_log)
