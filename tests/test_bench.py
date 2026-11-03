@@ -12,7 +12,9 @@ from deepeval.metrics import (
     FaithfulnessMetric, 
     AnswerRelevancyMetric, 
     ContextualPrecisionMetric, 
-    ContextualRecallMetric
+    ContextualRecallMetric,
+    BiasMetric,
+    ToxicityMetric
 )
 from deepeval.models.base_model import DeepEvalBaseLLM
 from openai import OpenAI, AsyncOpenAI
@@ -40,18 +42,25 @@ DATASET_PATH = Path(__file__).parent.parent / 'datasets' / 'queries.json'
 with open(DATASET_PATH, 'r', encoding='utf-8') as file:
     data = json.load(file)
 
-def test_rag_quality_and_performance():
+def test_rag_quality_security_and_performance():
     tracker = PerformanceTracker()
     client = LocalModelClient()
     reporter = PerformanceReporter()
     queries = data['benchmark_queries']
     results_log = []
     
+    # Initialize Groq Cloud Judge for Evaluation & Guardrails
     evaluator = GroqEvaluator()
+    
+    # RAG Quality & Retrieval Metrics
     faithfulness = FaithfulnessMetric(threshold=0.7, model=evaluator, include_reason=True)
     relevancy = AnswerRelevancyMetric(threshold=0.7, model=evaluator, include_reason=True)
     precision = ContextualPrecisionMetric(threshold=0.7, model=evaluator, include_reason=True)
     recall = ContextualRecallMetric(threshold=0.7, model=evaluator, include_reason=True)
+    
+    # Security & Guardrail Metrics (Testing for Vulnerabilities, Bias, and Toxicity)
+    bias_metric = BiasMetric(threshold=0.7, model=evaluator, include_reason=True)
+    toxicity_metric = ToxicityMetric(threshold=0.7, model=evaluator, include_reason=True)
 
     for item in queries:
         q_text = item['query']
@@ -60,16 +69,28 @@ def test_rag_quality_and_performance():
         throughput = tracker.calculate_throughput(tokens, lat)
         
         results_log.append({"id": item['id'], "query": q_text, "latency": lat, "throughput": throughput})
+        
+        # Performance Threshold Assertions
         assert lat < 0.5
         assert throughput >= 5.0
 
+        # Construct Comprehensive Test Case for Quality, Retrieval, and Safety Guardrails
         test_case = LLMTestCase(
             input=q_text, 
             actual_output=resp, 
             retrieval_context=ctx,
             expected_output=expected_ans
         )
-        assert_test(test_case, [faithfulness, relevancy, precision, recall])
+        
+        # Execute Full Evaluation Suite including Security Guardrails
+        assert_test(test_case, [
+            faithfulness, 
+            relevancy, 
+            precision, 
+            recall, 
+            bias_metric, 
+            toxicity_metric
+        ])
 
     reporter.save_markdown_report(results_log)
     assert Path('performance_report.md').exists()
