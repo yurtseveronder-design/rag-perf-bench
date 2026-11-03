@@ -1,20 +1,13 @@
-# RAG Performance & Security Evaluation Benchmarking Engine
+# Prompt Shield Tester (Bio-Immune LLM Security Engine)
 
-A robust, modular testing and benchmarking ecosystem designed to evaluate Retrieval-Augmented Generation (RAG) pipelines for latency, throughput, faithfulness, answer relevancy, and bias.
+An adversarial testing and security hardening framework designed to evaluate Large Language Models against prompt injections, jailbreaks, and vector mutations using bio-immune scoring concepts.
 
 ## Core Capabilities
-* **Automated Evaluation Pipeline:** End-to-end orchestration connecting test datasets, model inference, and metric validation.
-* **LLM Guardrails Integration:** Powered by DeepEval metrics (Faithfulness, Relevancy, Bias) backed by high-speed Groq inference.
-* **Cognitive Resonance Scoring:** Analyzes lexical overlap and structural pacing to ensure generated responses match semantic intent.
-* **Data-Driven Reporting:** Automatically compiles test runs into clean, actionable Markdown performance reports (`performance_report.md`).
+* **Adaptive Prompt Mutations:** Automatically mutates input prompts to test LLM robustness against semantic obfuscation.
+* **Threat Scoring Engine:** Calculates confidence scores and threat thresholds to flag potential system bypass attempts.
+* **Security Guardrails:** Validates outputs against unauthorized instruction overrides and root credential leaks.
 
 ## Tech Stack
 * **Language:** Python
-* **Testing Framework:** `pytest`
-* **Evaluation & Metrics:** `DeepEval`, OpenAI / Groq API integrations
-* **Automation & CI/CD:** Git, GitHub Actions
-
-## Getting Started
-1. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
+* **Testing:** Pytest security suites
+* **Security Telemetry:** Custom immune mutation scoring algorithms
