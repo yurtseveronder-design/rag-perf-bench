@@ -1,3 +1,5 @@
+> ⚠️ **DEPRECATED**: This project has been migrated and unified into the single-source-of-truth **[ai-sentinel](https://github.com/yurtseveronder-design/ai-sentinel)** repository. Please visit there for active code and updates.
+
 # RAG Performance Bench
 
 **Purpose:** RAG Quality, Latency, Throughput Telemetry, and Cognitive Resonance benchmarking.
