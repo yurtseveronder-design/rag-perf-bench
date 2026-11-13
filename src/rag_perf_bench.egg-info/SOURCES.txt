@@ -1,9 +1,0 @@
-pyproject.toml
-src/__init__.py
-src/metrics.py
-src/rag_perf_bench.egg-info/PKG-INFO
-src/rag_perf_bench.egg-info/SOURCES.txt
-src/rag_perf_bench.egg-info/dependency_links.txt
-src/rag_perf_bench.egg-info/requires.txt
-src/rag_perf_bench.egg-info/top_level.txt
-tests/test_bench.py
